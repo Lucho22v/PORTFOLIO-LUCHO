@@ -38,7 +38,7 @@
     --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
     --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
-    --max-w: 680px;
+    --max-w: 720px;
     --radius: 4px;
   }
 
@@ -85,9 +85,15 @@
   .section{
     padding: 64px 0;
     border-bottom: 1px solid var(--line);
+    scroll-margin-top: 76px; /* así el título no queda tapado por el header sticky al hacer click en un link ancla */
   }
 
   .section:last-of-type{ border-bottom: none; }
+
+  /* Un poco más de aire en pantallas grandes, sin tocar el ancho de lectura */
+  @media (min-width: 900px){
+    .section{ padding: 88px 0; }
+  }
 
   .section__title{
     font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
@@ -121,6 +127,7 @@
     top: 0;
     z-index: 10;
     background: rgba(247, 240, 235, 0.92);
+    -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
     border-bottom: 1px solid var(--line);
   }
@@ -128,11 +135,30 @@
   .site-header__inner{
     max-width: var(--max-w);
     margin: 0 auto;
-    padding: 18px 24px;
+    padding: 16px 24px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 16px;
+    gap: 12px;
+  }
+
+  .nav{
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .nav__link{
+    font-size: 0.9rem;
+    text-decoration: none;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .nav__link:hover{ color: var(--ink); }
+
+  @media (max-width: 400px){
+    .nav{ gap: 10px; }
+    .nav__link{ font-size: 0.8rem; }
   }
 
   .wordmark{
@@ -149,7 +175,7 @@
     font-size: 0.95rem;
     text-decoration: none;
     text-align: center;
-    padding: 12px 22px;
+    padding: 13px 22px;
     border-radius: var(--radius);
     border: 1px solid transparent;
     cursor: pointer;
@@ -207,8 +233,19 @@
   .hero__actions{
     margin-top: 28px;
     display: flex;
-    gap: 14px;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .hero__actions .btn{ text-align: center; }
+
+  @media (min-width: 480px){
+    .hero__actions{
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+    .hero__actions .btn{ flex: 0 0 auto; }
   }
 
   /* ============================================================
@@ -306,6 +343,21 @@
     padding: 24px;
     color: var(--muted);
     font-size: 0.95rem;
+  }
+
+  /* Variante con CTA a la demo real: ya no es una caja vacía */
+  .demo-box--live{
+    border-style: solid;
+    flex-direction: column;
+    gap: 14px;
+    aspect-ratio: auto;
+    padding: 32px 24px;
+  }
+
+  .demo-box--live p{
+    margin: 0;
+    color: var(--ink);
+    font-weight: 600;
   }
 
   /* ============================================================
@@ -460,8 +512,12 @@
   .cta__box{
     background: var(--ink);
     color: var(--bg);
-    padding: 48px 32px;
+    padding: 36px 24px;
     border-radius: var(--radius);
+  }
+
+  @media (min-width: 600px){
+    .cta__box{ padding: 48px 40px; }
   }
 
   .cta__box h2{
@@ -508,8 +564,8 @@
   <header class="site-header">
     <div class="site-header__inner">
       <a href="#top" class="wordmark">Luciano</a>
-      <nav style="display:flex; align-items:center; gap:18px;">
-        <a href="demo.html" style="font-size:0.9rem; text-decoration:none; color:var(--muted);">Ver demo</a>
+      <nav class="nav">
+        <a href="demo.html" class="nav__link">Ver demo</a>
         <a href="#reunion" class="btn btn--primary btn--small">Agendar reunión</a>
       </nav>
     </div>
@@ -591,8 +647,8 @@
       </div>
 
       <!-- Demo interactiva real, vive en demo.html -->
-      <div class="demo-box" style="border-style: solid; flex-direction: column; gap: 14px;">
-        <p style="margin:0; color: var(--ink); font-weight:600;">Probala vos mismo con un catálogo de ejemplo</p>
+      <div class="demo-box demo-box--live">
+        <p>Probala vos mismo con un catálogo de ejemplo</p>
         <a href="demo.html" class="btn btn--primary btn--small">Abrir la demo interactiva</a>
       </div>
     </section>
