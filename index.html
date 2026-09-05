@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luciano — Catálogos digitales para perfumerías</title>
+<meta name="description" content="Catálogos digitales conectados a WhatsApp para que tus clientas armen su pedido solas, sin que atiendas uno por uno.">
+
+<!--
+  Tipografías: una serif con carácter para títulos (Fraunces) y una
+  sans-serif limpia para el texto (Inter). Si no hay conexión a
+  internet al abrir el archivo con doble clic, el navegador cae en
+  las fuentes del sistema definidas más abajo, así que la página
+  nunca se rompe por falta de red.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  /* ============================================================
+     1. TOKENS DE DISEÑO
+     Paleta pensada en frascos de perfume: fondo porcelana cálido,
+     tinta casi negra con base violeta, y un vino profundo como
+     acento (no el típico terracota). Todo el sistema se apoya en
+     estas variables para mantener consistencia.
+     ============================================================ */
+  :root{
+    --bg: #F7F0EB;
+    --bg-soft: #EFE1D9;
+    --ink: #261E22;
+    --muted: #6E5D60;
+    --accent: #7A2E3A;      /* vino — color de acento principal */
+    --accent-2: #B98B6F;    /* ámbar suave — detalles y líneas */
+    --line: #DFCFC6;
+    --white: #FFFDFB;
+
+    --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+    --max-w: 680px;
+    --radius: 4px;
+  }
+
+  /* ============================================================
+     2. BASE
+     ============================================================ */
+  *, *::before, *::after{ box-sizing: border-box; }
+
+  html{ scroll-behavior: smooth; }
+
+  body{
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3{
+    font-family: var(--font-display);
+    font-weight: 500;
+    line-height: 1.15;
+    margin: 0 0 0.5em 0;
+    color: var(--ink);
+  }
+
+  p{ margin: 0 0 1em 0; }
+
+  a{ color: inherit; }
+
+  img, svg{ display: block; max-width: 100%; }
+
+  ul{ margin: 0; padding: 0; list-style: none; }
+
+  /* Contenedor central de lectura: menos de 80 caracteres por línea */
+  .container{
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .section{
+    padding: 64px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .section:last-of-type{ border-bottom: none; }
+
+  .section__title{
+    font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
+    margin-bottom: 0.6em;
+  }
+
+  .section__lead{
+    color: var(--muted);
+    max-width: 56ch;
+  }
+
+  /* Texto de relleno: se distingue apenas del resto para que quede
+     claro qué hay que reemplazar por la copy final. */
+  .placeholder{
+    color: var(--muted);
+  }
+
+  .note{
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 0.85rem;
+    color: var(--accent-2);
+    font-style: italic;
+  }
+
+  /* ============================================================
+     3. HEADER
+     ============================================================ */
+  .site-header{
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: rgba(247, 240, 235, 0.92);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .site-header__inner{
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .wordmark{
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    text-decoration: none;
+    color: var(--ink);
+  }
+
+  .btn{
+    display: inline-block;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    text-align: center;
+    padding: 12px 22px;
+    border-radius: var(--radius);
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .btn--primary{
+    background: var(--accent);
+    color: var(--white);
+  }
+  .btn--primary:hover{ background: #5f2129; }
+
+  .btn--small{
+    padding: 9px 16px;
+    font-size: 0.85rem;
+  }
+
+  .btn--ghost{
+    background: transparent;
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+  .btn--ghost:hover{ background: var(--ink); color: var(--white); }
+
+  .btn:focus-visible{
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* ============================================================
+     4. HERO / PRESENTACIÓN
+     ============================================================ */
+  .hero{
+    padding: 72px 0 56px;
+  }
+
+  .hero__icon{
+    width: 46px;
+    height: 46px;
+    margin-bottom: 28px;
+    color: var(--accent);
+  }
+
+  .hero h1{
+    font-size: clamp(1.75rem, 1.3rem + 2vw, 2.5rem);
+    max-width: 20ch;
+  }
+
+  .hero__lead{
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 48ch;
+  }
+
+  .hero__actions{
+    margin-top: 28px;
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  /* ============================================================
+     5. PARA QUIÉN SÍ / NO
+     ============================================================ */
+  .fit-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-top: 32px;
+  }
+
+  @media (max-width: 560px){
+    .fit-grid{ grid-template-columns: 1fr; }
+  }
+
+  .fit-col h3{
+    font-size: 1rem;
+    font-family: var(--font-body);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .fit-col--yes h3{ color: var(--accent); }
+  .fit-col--no h3{ color: var(--muted); }
+
+  .fit-col ul li{
+    padding-left: 22px;
+    position: relative;
+    margin-bottom: 10px;
+    color: var(--muted);
+  }
+
+  .fit-col--yes li::before{
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+  }
+
+  .fit-col--no li::before{
+    content: "✕";
+    position: absolute;
+    left: 0;
+    color: var(--muted);
+  }
+
+  /* ============================================================
+     6. DEMO (ANTES / DESPUÉS)
+     ============================================================ */
+  .compare{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 32px;
+  }
+
+  @media (max-width: 560px){
+    .compare{ grid-template-columns: 1fr; }
+  }
+
+  .compare__col{
+    padding: 20px;
+    background: var(--bg-soft);
+    border-radius: var(--radius);
+  }
+
+  .compare__col h3{
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .compare__col p{
+    color: var(--muted);
+    font-size: 0.95rem;
+    margin: 0;
+  }
+
+  /* Caja vacía a la espera de la captura o video real de la demo */
+  .demo-box{
+    margin-top: 24px;
+    aspect-ratio: 16 / 9;
+    border: 1px dashed var(--accent-2);
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+
+  /* ============================================================
+     7. CÓMO TRABAJO — acá sí corresponde numerar,
+     porque es un proceso real con orden.
+     ============================================================ */
+  .steps{
+    margin-top: 32px;
+    position: relative;
+  }
+
+  .step{
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    gap: 18px;
+    position: relative;
+    padding-bottom: 32px;
+  }
+
+  .step:last-child{ padding-bottom: 0; }
+
+  /* línea vertical que conecta los pasos */
+  .step:not(:last-child)::before{
+    content: "";
+    position: absolute;
+    left: 19px;
+    top: 40px;
+    bottom: 0;
+    width: 1px;
+    background: var(--line);
+  }
+
+  .step__num{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-family: var(--font-display);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+    background: var(--bg);
+    z-index: 1;
+  }
+
+  .step h3{
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .step p{
+    color: var(--muted);
+    margin: 0;
+  }
+
+  /* ============================================================
+     8. PRESUPUESTO
+     ============================================================ */
+  .budget-actions{
+    margin-top: 24px;
+  }
+
+  /* ============================================================
+     9. PREGUNTAS FRECUENTES
+     ============================================================ */
+  .faq{
+    margin-top: 28px;
+    border-top: 1px solid var(--line);
+  }
+
+  .faq details{
+    border-bottom: 1px solid var(--line);
+    padding: 18px 0;
+  }
+
+  .faq summary{
+    cursor: pointer;
+    font-weight: 600;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .faq summary::-webkit-details-marker{ display: none; }
+
+  .faq summary::after{
+    content: "+";
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    color: var(--accent);
+    flex-shrink: 0;
+    transition: transform 0.15s ease;
+  }
+
+  .faq details[open] summary::after{
+    transform: rotate(45deg);
+  }
+
+  .faq summary:focus-visible{
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+  }
+
+  .faq p{
+    margin-top: 12px;
+    color: var(--muted);
+    max-width: 56ch;
+  }
+
+  /* ============================================================
+     10. CTA FINAL — REUNIÓN
+     ============================================================ */
+  .cta{
+    text-align: left;
+    padding-bottom: 88px;
+  }
+
+  .cta__box{
+    background: var(--ink);
+    color: var(--bg);
+    padding: 48px 32px;
+    border-radius: var(--radius);
+  }
+
+  .cta__box h2{
+    color: var(--bg);
+  }
+
+  .cta__box p{
+    color: #C9BEC0;
+    max-width: 46ch;
+  }
+
+  .cta .btn--primary{
+    margin-top: 12px;
+    background: var(--white);
+    color: var(--ink);
+  }
+
+  .cta .btn--primary:hover{
+    background: var(--bg-soft);
+  }
+
+  /* ============================================================
+     11. FOOTER
+     ============================================================ */
+  .site-footer{
+    padding: 32px 0 48px;
+    text-align: left;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+
+  /* ============================================================
+     12. ACCESIBILIDAD — respeta si el usuario pidió menos movimiento
+     ============================================================ */
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior: auto; }
+    *{ transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- ================= HEADER ================= -->
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a href="#top" class="wordmark">Luciano</a>
+      <nav style="display:flex; align-items:center; gap:18px;">
+        <a href="demo.html" style="font-size:0.9rem; text-decoration:none; color:var(--muted);">Ver demo</a>
+        <a href="#reunion" class="btn btn--primary btn--small">Agendar reunión</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- ================= 1. PRESENTACIÓN ================= -->
+    <section class="section hero container" id="presentacion">
+      <!-- Ícono simple de frasco, elemento de firma de la página -->
+      <svg class="hero__icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M20 6H28V12C28 12 32 14 32 19V40C32 41.6569 30.6569 43 29 43H19C17.3431 43 16 41.6569 16 40V19C16 14 20 12 20 12V6Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+        <line x1="16" y1="24" x2="32" y2="24" stroke="currentColor" stroke-width="1.5"/>
+        <line x1="21" y1="3" x2="27" y2="3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+
+      <h1>Armo tu catálogo digital para que los clientes elijan y pidan solos.</h1>
+      <p class="hero__lead">
+        Soy Luciano. Ayudo a perfumerías que hoy toman pedidos por
+        WhatsApp a mano a dejar de perder tiempo y ventas en el
+        ida y vuelta: fotos sueltas, precios repetidos, clientas que
+        se cansan de esperar. Le armo un catálogo digital a tu negocio
+        para que cada clienta elija sola lo que quiere y a vos te
+        llegue el pedido prolijo, listo para confirmar.
+      </p>
+
+      <div class="hero__actions">
+        <a href="#reunion" class="btn btn--primary">Agendá una reunión de 20 minutos</a>
+        <a href="demo.html" class="btn btn--ghost">Ver la demo</a>
+      </div>
+    </section>
+
+    <!-- ================= 2. PARA QUIÉN SÍ / NO ================= -->
+    <section class="section container" id="para-quien">
+      <h2 class="section__title">¿Es esto para vos?</h2>
+      <p class="section__lead">
+        Trabajo con perfumerías de barrio o de shopping, con catálogo
+        grande y clientas que compran seguido. Fijate si te cierra.
+      </p>
+
+      <div class="fit-grid">
+        <div class="fit-col fit-col--yes">
+          <h3>Es para vos si</h3>
+          <ul>
+            <li>Tomás pedidos por WhatsApp a mano, uno por uno.</li>
+            <li>Tenés catálogo grande: tamaños, testeos, carteras.</li>
+            <li>Se te escapan ventas por no contestar a tiempo.</li>
+          </ul>
+        </div>
+        <div class="fit-col fit-col--no">
+          <h3>No es para vos si</h3>
+          <ul>
+            <li>No tomás pedidos por WhatsApp.</li>
+            <li>Ya tenés un sistema armado que te funciona bien.</li>
+            <li>No podés dedicar un rato a revisar el catálogo antes de activarlo.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 3. DEMO (ANTES / DESPUÉS) ================= -->
+    <section class="section container" id="demo">
+      <h2 class="section__title">Cómo cambia tu día a día</h2>
+      <p class="section__lead placeholder">
+        Texto de ejemplo: acá va una comparación breve de cómo se maneja
+        hoy un pedido por WhatsApp y cómo se maneja con el catálogo
+        digital funcionando.
+      </p>
+
+      <div class="compare">
+        <div class="compare__col">
+          <h3>Antes</h3>
+          <p class="placeholder">Texto placeholder de ejemplo describiendo la situación actual.</p>
+        </div>
+        <div class="compare__col">
+          <h3>Después</h3>
+          <p class="placeholder">Texto placeholder de ejemplo describiendo la situación con el catálogo activo.</p>
+        </div>
+      </div>
+
+      <!-- Demo interactiva real, vive en demo.html -->
+      <div class="demo-box" style="border-style: solid; flex-direction: column; gap: 14px;">
+        <p style="margin:0; color: var(--ink); font-weight:600;">Probala vos mismo con un catálogo de ejemplo</p>
+        <a href="demo.html" class="btn btn--primary btn--small">Abrir la demo interactiva</a>
+      </div>
+    </section>
+
+    <!-- ================= 4. CÓMO TRABAJO ================= -->
+    <section class="section container" id="como-trabajo">
+      <h2 class="section__title">Cómo trabajo, paso a paso</h2>
+      <p class="section__lead placeholder">
+        Texto de ejemplo: introducción breve al proceso, desde que se
+        pasan las fotos y precios hasta que el catálogo queda activo.
+      </p>
+
+      <ol class="steps">
+        <li class="step">
+          <span class="step__num">1</span>
+          <div>
+            <h3>Texto placeholder del paso 1</h3>
+            <p class="placeholder">Texto de ejemplo describiendo el primer paso del proceso.</p>
+          </div>
+        </li>
+        <li class="step">
+          <span class="step__num">2</span>
+          <div>
+            <h3>Texto placeholder del paso 2</h3>
+            <p class="placeholder">Texto de ejemplo describiendo el armado del catálogo.</p>
+          </div>
+        </li>
+        <li class="step">
+          <span class="step__num">3</span>
+          <div>
+            <h3>Texto placeholder del paso 3</h3>
+            <p class="placeholder">Texto de ejemplo describiendo la revisión y activación final.</p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ================= 5. CÓMO ARMO UN PRESUPUESTO ================= -->
+    <section class="section container" id="presupuesto">
+      <h2 class="section__title">Cómo armo un presupuesto</h2>
+      <p class="section__lead placeholder">
+        Texto de ejemplo: acá se explica por qué no hay un precio fijo
+        publicado y por qué el número se conversa después de ver la
+        demo, en una reunión corta.
+      </p>
+      <div class="budget-actions">
+        <a href="#reunion" class="btn btn--ghost">Coordinar la reunión</a>
+      </div>
+    </section>
+
+    <!-- ================= 6. PREGUNTAS FRECUENTES ================= -->
+    <section class="section container" id="preguntas">
+      <h2 class="section__title">Preguntas frecuentes</h2>
+      <p class="section__lead placeholder">
+        Texto de ejemplo: las dudas más comunes antes de escribir,
+        respondidas antes de que haga falta preguntarlas.
+      </p>
+
+      <div class="faq">
+        <details>
+          <summary>¿Esto reemplaza mi WhatsApp o funciona junto con él?</summary>
+          <p class="placeholder">Texto placeholder de ejemplo para esta respuesta.</p>
+        </details>
+        <details>
+          <summary>¿Cuánto tarda una clienta en aprender a usarlo?</summary>
+          <p class="placeholder">Texto placeholder de ejemplo para esta respuesta.</p>
+        </details>
+        <details>
+          <summary>¿Qué pasa si quiero cambiar precios o agregar productos?</summary>
+          <p class="placeholder">Texto placeholder de ejemplo para esta respuesta.</p>
+        </details>
+        <details>
+          <summary>¿Necesito comprar algo aparte?</summary>
+          <p class="placeholder">Texto placeholder de ejemplo para esta respuesta.</p>
+        </details>
+        <details>
+          <summary>¿Me lo dejás armado o dependo de vos siempre?</summary>
+          <p class="placeholder">Texto placeholder de ejemplo para esta respuesta.</p>
+        </details>
+        <details>
+          <summary>¿Qué pasa si se rompe algo?</summary>
+          <p class="placeholder">Texto placeholder de ejemplo para esta respuesta.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- ================= 7. CTA FINAL — REUNIÓN ================= -->
+    <section class="section cta container" id="reunion">
+      <div class="cta__box">
+        <h2>Charlemos 20 minutos</h2>
+        <p class="placeholder">
+          Texto de ejemplo: invitación corta a agendar, sin compromiso,
+          eligiendo día y horario.
+        </p>
+        <!--
+          El href queda en "#" a propósito: reemplazar por el link real
+          de agenda (Calendly, Google Calendar, etc.) cuando esté listo.
+        -->
+        <a href="#" class="btn btn--primary">Agendá una reunión de 20 minutos</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="site-footer container">
+    <p id="footer-text">Luciano — catálogos digitales para perfumerías</p>
+  </footer>
+
+  <script>
+    // ============================================================
+    // JS mínimo, sin dependencias.
+    // Único propósito: mostrar el año actual en el pie de página.
+    // ============================================================
+    (function actualizarAnio(){
+      var footer = document.getElementById('footer-text');
+      if (!footer) return;
+      var anio = new Date().getFullYear();
+      footer.textContent = 'Luciano — catálogos digitales para perfumerías · ' + anio;
+    })();
+  </script>
+
+</body>
+</html>

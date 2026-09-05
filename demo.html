@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demo — así arma el pedido tu clienta | Luciano</title>
+<meta name="description" content="Probá el catálogo digital: elegí productos y mirá cómo se arma solo el mensaje de WhatsApp con el pedido listo.">
+
+<!-- Mismas tipografías que la página principal, para que la demo se sienta parte del mismo sitio -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  /* ============================================================
+     1. TOKENS — los mismos valores que index.html, así la demo
+     se ve como parte del mismo sitio y no como algo pegado aparte.
+     ============================================================ */
+  :root{
+    --bg: #F7F0EB;
+    --bg-soft: #EFE1D9;
+    --ink: #261E22;
+    --muted: #6E5D60;
+    --accent: #7A2E3A;
+    --accent-2: #B98B6F;
+    --line: #DFCFC6;
+    --white: #FFFDFB;
+    --ok: #4B6C4F;
+
+    --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+    --max-w: 900px;
+    --radius: 4px;
+  }
+
+  *, *::before, *::after{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+
+  body{
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3{
+    font-family: var(--font-display);
+    font-weight: 500;
+    line-height: 1.15;
+    margin: 0 0 0.5em 0;
+  }
+
+  p{ margin: 0 0 1em 0; }
+  a{ color: inherit; }
+  img, svg{ display: block; max-width: 100%; }
+  ul{ margin: 0; padding: 0; list-style: none; }
+  button{ font-family: inherit; }
+
+  .container{
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ============================================================
+     2. HEADER — link de vuelta a la página principal
+     ============================================================ */
+  .site-header{
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: rgba(247, 240, 235, 0.92);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .site-header__inner{
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .wordmark{
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    text-decoration: none;
+    color: var(--ink);
+  }
+
+  .back-link{
+    font-size: 0.9rem;
+    color: var(--muted);
+    text-decoration: none;
+  }
+  .back-link:hover{ color: var(--ink); }
+
+  /* ============================================================
+     3. FRASES ANTES / DESPUÉS
+     ============================================================ */
+  .beat{
+    padding: 40px 0 8px;
+    text-align: left;
+  }
+
+  .beat--after{
+    padding: 8px 0 56px;
+  }
+
+  .beat__label{
+    display: block;
+    font-size: 0.85rem;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .beat p{
+    font-size: 1.2rem;
+    max-width: 56ch;
+    margin: 0;
+  }
+
+  .beat--after p{ color: var(--muted); }
+
+  /* ============================================================
+     4. TÍTULO DE LA DEMO
+     ============================================================ */
+  .demo-intro{
+    padding: 8px 0 24px;
+  }
+
+  .demo-intro h1{
+    font-size: clamp(1.6rem, 1.3rem + 1.3vw, 2.1rem);
+    max-width: 20ch;
+  }
+
+  .demo-intro .rubro{
+    color: var(--muted);
+    max-width: 52ch;
+  }
+
+  /* ============================================================
+     5. LAYOUT DE LA DEMO: productos + resumen del pedido
+     ============================================================ */
+  .demo-layout{
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 32px;
+    align-items: start;
+    padding-bottom: 24px;
+  }
+
+  @media (max-width: 760px){
+    .demo-layout{ grid-template-columns: 1fr; }
+  }
+
+  /* --- Grilla de productos --- */
+  .product-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  @media (max-width: 480px){
+    .product-grid{ grid-template-columns: 1fr; }
+  }
+
+  .product{
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 18px;
+    background: var(--white);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .product__icon{
+    width: 30px;
+    height: 30px;
+    color: var(--accent-2);
+  }
+
+  .product__name{
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    margin: 0;
+  }
+
+  .product__desc{
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin: 0;
+    flex-grow: 1;
+  }
+
+  .product__price{
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  .product__qty{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 4px;
+  }
+
+  .qty-control{
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .qty-btn{
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: var(--bg-soft);
+    color: var(--ink);
+    font-size: 1rem;
+    cursor: pointer;
+    line-height: 1;
+  }
+  .qty-btn:hover{ background: var(--accent-2); color: var(--white); }
+  .qty-btn:focus-visible{ outline: 2px solid var(--accent); outline-offset: -2px; }
+
+  .qty-value{
+    width: 34px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  .product[data-selected="true"]{
+    border-color: var(--accent);
+  }
+
+  /* --- Panel de resumen / mensaje de WhatsApp --- */
+  .order-panel{
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 22px;
+    background: var(--white);
+    position: sticky;
+    top: 90px;
+  }
+
+  @media (max-width: 760px){
+    .order-panel{ position: static; }
+  }
+
+  .order-panel h2{
+    font-size: 1.05rem;
+    font-family: var(--font-body);
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .order-panel__hint{
+    color: var(--muted);
+    font-size: 0.88rem;
+    margin-bottom: 16px;
+  }
+
+  .order-empty{
+    color: var(--muted);
+    font-size: 0.92rem;
+    padding: 20px 0;
+    text-align: center;
+    border: 1px dashed var(--line);
+    border-radius: var(--radius);
+  }
+
+  .order-message{
+    width: 100%;
+    min-height: 160px;
+    resize: vertical;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--bg-soft);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    padding: 14px;
+  }
+
+  .order-total{
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin: 14px 0 4px;
+    font-weight: 600;
+  }
+
+  .order-total span:last-child{
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    color: var(--accent);
+  }
+
+  .order-actions{
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+
+  .btn{
+    display: inline-block;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    text-align: center;
+    padding: 12px 22px;
+    border-radius: var(--radius);
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .btn--primary{ background: var(--accent); color: var(--white); }
+  .btn--primary:hover{ background: #5f2129; }
+  .btn--primary:disabled{
+    background: var(--line);
+    color: var(--muted);
+    cursor: not-allowed;
+  }
+
+  .btn--ghost{
+    background: transparent;
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+  .btn--ghost:hover{ background: var(--ink); color: var(--white); }
+
+  .btn:focus-visible{ outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .copy-feedback{
+    display: inline-block;
+    margin-left: 4px;
+    font-size: 0.85rem;
+    color: var(--ok);
+    font-weight: 600;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+  }
+
+  .copy-feedback[data-show="true"]{ opacity: 1; }
+
+  /* ============================================================
+     6. CTA FINAL
+     ============================================================ */
+  .cta{
+    padding: 40px 0 88px;
+  }
+
+  .cta__box{
+    background: var(--ink);
+    color: var(--bg);
+    padding: 40px 32px;
+    border-radius: var(--radius);
+    text-align: left;
+  }
+
+  .cta__box p{
+    color: #C9BEC0;
+    max-width: 50ch;
+    margin-bottom: 20px;
+  }
+
+  .cta .btn--primary{
+    background: var(--white);
+    color: var(--ink);
+  }
+  .cta .btn--primary:hover{ background: var(--bg-soft); }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior: auto; }
+    *{ transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a href="index.html" class="wordmark">Luciano</a>
+      <a href="index.html" class="back-link">← Volver al inicio</a>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- ================= 1. ANTES (una frase) ================= -->
+    <section class="beat">
+      <span class="beat__label">Antes</span>
+      <p>
+        La clienta pregunta por cinco fragancias distintas y vos contestás
+        una por una, mandando fotos sueltas y repitiendo precios por WhatsApp.
+      </p>
+    </section>
+
+    <!-- ================= 2. LA DEMO ================= -->
+    <section class="demo-intro">
+      <h1>Así arma el pedido tu clienta, sola.</h1>
+      <p class="rubro">
+        Ejemplo con el catálogo de una perfumería árabe: elegí los
+        productos como si fueras la clienta y mirá cómo se arma el
+        mensaje de WhatsApp, listo para copiar y mandar.
+      </p>
+    </section>
+
+    <section class="demo-layout" id="demo-app">
+      <!-- Grilla de productos: se completa con JS a partir de PRODUCTOS -->
+      <div class="product-grid" id="product-grid" aria-label="Catálogo de productos"></div>
+
+      <!-- Panel de resumen del pedido -->
+      <div class="order-panel" aria-live="polite">
+        <h2>Tu pedido</h2>
+        <p class="order-panel__hint">Se arma solo a medida que elegís productos.</p>
+
+        <div id="order-empty" class="order-empty">
+          Todavía no elegiste ningún producto.
+        </div>
+
+        <div id="order-filled" style="display:none;">
+          <div class="order-total">
+            <span>Total</span>
+            <span id="order-total-value">$0</span>
+          </div>
+          <label for="order-message" style="font-size:0.85rem; color: var(--muted);">
+            Mensaje listo para WhatsApp
+          </label>
+          <textarea id="order-message" class="order-message" readonly></textarea>
+          <div class="order-actions">
+            <button type="button" id="copy-btn" class="btn btn--primary">Copiar mensaje</button>
+            <button type="button" id="reset-btn" class="btn btn--ghost">Vaciar pedido</button>
+            <span id="copy-feedback" class="copy-feedback" role="status">¡Copiado!</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 3. DESPUÉS (una frase) ================= -->
+    <section class="beat beat--after">
+      <span class="beat__label">Después</span>
+      <p>
+        El pedido te llega armado como el mensaje de arriba: vos solo
+        tenés que confirmarlo y coordinar el pago o el envío.
+      </p>
+    </section>
+
+    <!-- ================= 4. CTA FINAL ================= -->
+    <section class="cta">
+      <div class="cta__box">
+        <h2>¿Lo ves claro?</h2>
+        <p>
+          Esto fue un ejemplo con perfumería árabe. Puedo armar la
+          misma lógica con tu catálogo real, tus productos y tus fotos.
+        </p>
+        <a href="index.html#reunion" class="btn btn--primary">
+          ¿Lo ves claro? Agendá 20 minutos y te armo la versión para tu negocio
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // ============================================================
+    // JS mínimo, sin dependencias, sin servidor.
+    // Catálogo de ejemplo: perfumería árabe, 6 productos.
+    // ============================================================
+    var PRODUCTOS = [
+      {
+        id: 'oud-sultan',
+        nombre: 'Oud Al Sultán',
+        descripcion: 'Oud amaderado intenso, 50ml.',
+        precio: 18500
+      },
+      {
+        id: 'rosa-taif',
+        nombre: 'Rosa de Taif',
+        descripcion: 'Rosa árabe con fondo dulce, 50ml.',
+        precio: 16800
+      },
+      {
+        id: 'ambar-dorado',
+        nombre: 'Ámbar Dorado',
+        descripcion: 'Ámbar cálido con toque de vainilla, 50ml.',
+        precio: 15200
+      },
+      {
+        id: 'musk-haramain',
+        nombre: 'Musk Al Haramain',
+        descripcion: 'Almizcle suave, unisex, 50ml.',
+        precio: 14500
+      },
+      {
+        id: 'sandalo-real',
+        nombre: 'Sándalo Real',
+        descripcion: 'Sándalo cremoso, estilo oriental, 50ml.',
+        precio: 17300
+      },
+      {
+        id: 'bakhoor-sheikh',
+        nombre: 'Bakhoor Al Sheikh',
+        descripcion: 'Incienso oriental profundo, 50ml.',
+        precio: 19900
+      }
+    ];
+
+    // Estado: cantidad elegida por producto (todo arranca en 0)
+    var cantidades = {};
+    PRODUCTOS.forEach(function(p){ cantidades[p.id] = 0; });
+
+    var grid = document.getElementById('product-grid');
+    var orderEmpty = document.getElementById('order-empty');
+    var orderFilled = document.getElementById('order-filled');
+    var orderTotalValue = document.getElementById('order-total-value');
+    var orderMessage = document.getElementById('order-message');
+    var copyBtn = document.getElementById('copy-btn');
+    var resetBtn = document.getElementById('reset-btn');
+    var copyFeedback = document.getElementById('copy-feedback');
+
+    function formatearPrecio(numero){
+      return '$' + numero.toLocaleString('es-AR');
+    }
+
+    // Ícono simple de frasco, el mismo elemento de firma que en la página principal
+    var ICONO_FRASCO =
+      '<svg class="product__icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+      '<path d="M20 6H28V12C28 12 32 14 32 19V40C32 41.6569 30.6569 43 29 43H19C17.3431 43 16 41.6569 16 40V19C16 14 20 12 20 12V6Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>' +
+      '<line x1="16" y1="24" x2="32" y2="24" stroke="currentColor" stroke-width="1.5"/>' +
+      '<line x1="21" y1="3" x2="27" y2="3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>' +
+      '</svg>';
+
+    // Dibuja las 6 tarjetas de producto una sola vez
+    function renderProductos(){
+      var html = '';
+      PRODUCTOS.forEach(function(p){
+        html += '' +
+          '<div class="product" id="card-' + p.id + '" data-selected="false">' +
+            ICONO_FRASCO +
+            '<h3 class="product__name">' + p.nombre + '</h3>' +
+            '<p class="product__desc">' + p.descripcion + '</p>' +
+            '<p class="product__price">' + formatearPrecio(p.precio) + '</p>' +
+            '<div class="product__qty">' +
+              '<span style="font-size:0.85rem; color: var(--muted);">Cantidad</span>' +
+              '<div class="qty-control">' +
+                '<button type="button" class="qty-btn" data-action="menos" data-id="' + p.id + '" aria-label="Restar ' + p.nombre + '">−</button>' +
+                '<span class="qty-value" id="qty-' + p.id + '">0</span>' +
+                '<button type="button" class="qty-btn" data-action="mas" data-id="' + p.id + '" aria-label="Sumar ' + p.nombre + '">+</button>' +
+              '</div>' +
+            '</div>' +
+          '</div>';
+      });
+      grid.innerHTML = html;
+    }
+
+    // Recalcula total, arma el mensaje de WhatsApp y actualiza el panel
+    function actualizarResumen(){
+      var elegidos = PRODUCTOS.filter(function(p){ return cantidades[p.id] > 0; });
+
+      if (elegidos.length === 0){
+        orderEmpty.style.display = 'block';
+        orderFilled.style.display = 'none';
+        return;
+      }
+
+      orderEmpty.style.display = 'none';
+      orderFilled.style.display = 'block';
+
+      var total = 0;
+      var lineas = [];
+      elegidos.forEach(function(p){
+        var cant = cantidades[p.id];
+        var subtotal = cant * p.precio;
+        total += subtotal;
+        lineas.push('- ' + p.nombre + ' x' + cant + ' – ' + formatearPrecio(subtotal));
+      });
+
+      orderTotalValue.textContent = formatearPrecio(total);
+
+      var mensaje =
+        'Hola! Quiero hacer este pedido:\n\n' +
+        lineas.join('\n') +
+        '\n\nTotal: ' + formatearPrecio(total) +
+        '\n\n¡Gracias!';
+
+      orderMessage.value = mensaje;
+    }
+
+    // Suma o resta la cantidad de un producto y refleja el cambio visual
+    function cambiarCantidad(id, delta){
+      var nueva = cantidades[id] + delta;
+      if (nueva < 0) nueva = 0;
+      if (nueva > 9) nueva = 9;
+      cantidades[id] = nueva;
+
+      document.getElementById('qty-' + id).textContent = nueva;
+      document.getElementById('card-' + id).setAttribute('data-selected', nueva > 0 ? 'true' : 'false');
+
+      actualizarResumen();
+    }
+
+    grid && grid.addEventListener('click', function(evento){
+      var boton = evento.target.closest('.qty-btn');
+      if (!boton) return;
+      var id = boton.getAttribute('data-id');
+      var delta = boton.getAttribute('data-action') === 'mas' ? 1 : -1;
+      cambiarCantidad(id, delta);
+    });
+
+    // Copiar el mensaje armado, con respaldo por si el navegador
+    // no soporta la API moderna de portapapeles (ej: abierto con file://)
+    copyBtn.addEventListener('click', function(){
+      var texto = orderMessage.value;
+
+      function mostrarFeedback(){
+        copyFeedback.setAttribute('data-show', 'true');
+        setTimeout(function(){ copyFeedback.setAttribute('data-show', 'false'); }, 1800);
+      }
+
+      if (navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(texto).then(mostrarFeedback).catch(function(){
+          copiarConRespaldo();
+        });
+      } else {
+        copiarConRespaldo();
+      }
+
+      function copiarConRespaldo(){
+        orderMessage.removeAttribute('readonly');
+        orderMessage.select();
+        try { document.execCommand('copy'); } catch (error) { /* silencioso: no hay más respaldo posible */ }
+        orderMessage.setAttribute('readonly', 'true');
+        mostrarFeedback();
+      }
+    });
+
+    // Vaciar el pedido y volver todas las cantidades a cero
+    resetBtn.addEventListener('click', function(){
+      PRODUCTOS.forEach(function(p){
+        cantidades[p.id] = 0;
+        document.getElementById('qty-' + p.id).textContent = 0;
+        document.getElementById('card-' + p.id).setAttribute('data-selected', 'false');
+      });
+      actualizarResumen();
+    });
+
+    renderProductos();
+    actualizarResumen();
+  </script>
+
+</body>
+</html>
