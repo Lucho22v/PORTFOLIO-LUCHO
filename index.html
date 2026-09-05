@@ -249,6 +249,64 @@
   }
 
   /* ============================================================
+     4b. PESTAÑAS DESLIZABLES
+     Agrupan "Para quién", "Cómo trabajo", "Cómo cambia tu día a día"
+     y "Presupuesto" en un solo bloque, para no tirar todo el texto
+     de una sola vez. La barra de botones se desliza con el dedo en
+     celular (overflow-x) y con click en desktop.
+     ============================================================ */
+  .tabs-hint{
+    color: var(--muted);
+    font-size: 0.85rem;
+    margin-bottom: 14px;
+  }
+
+  .tabs{
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 6px;
+    margin: 0 -24px 28px;
+    padding-left: 24px;
+    padding-right: 24px;
+    scrollbar-width: thin;
+  }
+
+  .tab-btn{
+    flex: 0 0 auto;
+    padding: 10px 18px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--white);
+    color: var(--muted);
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.88rem;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .tab-btn:hover{
+    border-color: var(--accent-2);
+    color: var(--ink);
+  }
+
+  .tab-btn[aria-selected="true"]{
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--white);
+  }
+
+  .tab-btn:focus-visible{
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .tab-panel[hidden]{ display: none; }
+
+  /* ============================================================
      5. PARA QUIÉN SÍ / NO
      ============================================================ */
   .fit-grid{
@@ -566,7 +624,7 @@
       <a href="#top" class="wordmark">Luciano</a>
       <nav class="nav">
         <a href="demo.html" class="nav__link">Ver demo</a>
-        <a href="#reunion" class="btn btn--primary btn--small">Agendar reunión</a>
+        <a href="https://wa.me/54911XXXXXXXX" class="btn btn--primary btn--small" target="_blank" rel="noopener">Agendar reunión</a>
       </nav>
     </div>
   </header>
@@ -582,7 +640,7 @@
         <line x1="21" y1="3" x2="27" y2="3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
       </svg>
 
-      <h1>Armo tu catálogo digital para que los clientes elijan y pidan solos.</h1>
+      <h1>Tu catálogo digital listo para vender.</h1>
       <p class="hero__lead">
         Soy Luciano. Ayudo a perfumerías que hoy toman pedidos por
         WhatsApp a mano a dejar de perder tiempo y ventas en el
@@ -593,153 +651,164 @@
       </p>
 
       <div class="hero__actions">
-        <a href="#reunion" class="btn btn--primary">Agendá una reunión de 20 minutos</a>
+        <a href="https://wa.me/54911XXXXXXXX" class="btn btn--primary" target="_blank" rel="noopener">Agendá una reunión de 20 minutos</a>
         <a href="demo.html" class="btn btn--ghost">Ver la demo</a>
       </div>
     </section>
 
-    <!-- ================= 2. PARA QUIÉN SÍ / NO ================= -->
-    <section class="section container" id="para-quien">
-      <h2 class="section__title">¿Es esto para vos?</h2>
-      <p class="section__lead">
-        Trabajo con perfumerías de barrio o de shopping, con catálogo
-        grande y clientas que compran seguido. Fijate si te cierra.
-      </p>
+    <!-- ================= 2. PESTAÑAS: PARA QUIÉN / CÓMO TRABAJO / DEMO / PRESUPUESTO ================= -->
+    <section class="section container" id="proceso">
+      <p class="tabs-hint">Elegí qué querés ver:</p>
 
-      <div class="fit-grid">
-        <div class="fit-col fit-col--yes">
-          <h3>Es para vos si</h3>
-          <ul>
-            <li>Tomás pedidos por WhatsApp a mano, uno por uno.</li>
-            <li>Tenés catálogo grande: tamaños, testeos, carteras.</li>
-            <li>Se te escapan ventas por no contestar a tiempo.</li>
-          </ul>
+      <!-- Barra de pestañas: se desliza con el dedo en celular -->
+      <div class="tabs" role="tablist" aria-label="Información sobre el servicio">
+        <button type="button" class="tab-btn" id="tab-para-quien" role="tab" aria-selected="true" aria-controls="panel-para-quien" data-tab="para-quien">¿Es esto para vos?</button>
+        <button type="button" class="tab-btn" id="tab-como-trabajo" role="tab" aria-selected="false" tabindex="-1" aria-controls="panel-como-trabajo" data-tab="como-trabajo">Cómo trabajo</button>
+        <button type="button" class="tab-btn" id="tab-demo" role="tab" aria-selected="false" tabindex="-1" aria-controls="panel-demo" data-tab="demo">Cómo cambia tu día a día</button>
+        <button type="button" class="tab-btn" id="tab-presupuesto" role="tab" aria-selected="false" tabindex="-1" aria-controls="panel-presupuesto" data-tab="presupuesto">Cómo armo un presupuesto</button>
+      </div>
+
+      <div class="tab-panels">
+
+        <!-- Panel: Para quién sí / no -->
+        <div class="tab-panel" id="panel-para-quien" role="tabpanel" aria-labelledby="tab-para-quien" data-panel="para-quien">
+          <p class="section__lead">
+            Trabajo con perfumerías de barrio o de shopping, con catálogo
+            grande y clientas que compran seguido. Fijate si te cierra.
+          </p>
+
+          <div class="fit-grid">
+            <div class="fit-col fit-col--yes">
+              <h3>Es para vos si</h3>
+              <ul>
+                <li>Tomás pedidos por WhatsApp a mano, uno por uno.</li>
+                <li>Tenés catálogo grande: tamaños, testeos, carteras.</li>
+                <li>Se te escapan ventas por no contestar a tiempo.</li>
+              </ul>
+            </div>
+            <div class="fit-col fit-col--no">
+              <h3>No es para vos si</h3>
+              <ul>
+                <li>No tomás pedidos por WhatsApp.</li>
+                <li>Ya tenés un sistema armado que te funciona bien.</li>
+                <li>No podés dedicar un rato a revisar el catálogo antes de activarlo.</li>
+              </ul>
+            </div>
+          </div>
         </div>
-        <div class="fit-col fit-col--no">
-          <h3>No es para vos si</h3>
-          <ul>
-            <li>No tomás pedidos por WhatsApp.</li>
-            <li>Ya tenés un sistema armado que te funciona bien.</li>
-            <li>No podés dedicar un rato a revisar el catálogo antes de activarlo.</li>
-          </ul>
+
+        <!-- Panel: Cómo trabajo -->
+        <div class="tab-panel" id="panel-como-trabajo" role="tabpanel" aria-labelledby="tab-como-trabajo" data-panel="como-trabajo" hidden>
+          <p class="section__lead">
+            Así es el proceso completo, desde que hablamos por primera vez
+            hasta que tu catálogo está funcionando. Primero ves cómo queda,
+            recién después hablamos de números.
+          </p>
+
+          <ol class="steps">
+            <li class="step">
+              <span class="step__num">1</span>
+              <div>
+                <h3>Reunión de 20 minutos</h3>
+                <p>Nos conocemos y te escucho: cómo tomás pedidos hoy y qué es lo que más te complica.</p>
+              </div>
+            </li>
+            <li class="step">
+              <span class="step__num">2</span>
+              <div>
+                <h3>Te muestro la demo adaptada a tu negocio</h3>
+                <p>La ves funcionando con productos parecidos a los tuyos, antes de que hablemos de plata. Recién ahí, si te cierra, conversamos la inversión.</p>
+              </div>
+            </li>
+            <li class="step">
+              <span class="step__num">3</span>
+              <div>
+                <h3>Alcance por escrito</h3>
+                <p>Te dejo por escrito qué incluye el trabajo y qué no, para que no haya sorpresas ni malentendidos después.</p>
+              </div>
+            </li>
+            <li class="step">
+              <span class="step__num">4</span>
+              <div>
+                <h3>Construcción</h3>
+                <p>Armo tu catálogo. Según cuánto tengas para cargar, esto lleva 7, 14 o 30 días.</p>
+              </div>
+            </li>
+            <li class="step">
+              <span class="step__num">5</span>
+              <div>
+                <h3>Entrega + un ajuste</h3>
+                <p>Te lo entrego, lo probás vos, y hacemos un ajuste si algo no te termina de cerrar.</p>
+              </div>
+            </li>
+            <li class="step">
+              <span class="step__num">6</span>
+              <div>
+                <h3>Cómo seguimos</h3>
+                <p>Charlamos qué pasa de acá en adelante: cambios, soporte y los próximos pasos si querés sumar más.</p>
+              </div>
+            </li>
+          </ol>
+
+          <p class="note" style="margin-top: 24px; font-style: normal;">
+            De tu lado necesito: tus fotos y precios (o acceso a donde los tengas) y una reunión corta por semana mientras armo el catálogo.
+          </p>
         </div>
+
+        <!-- Panel: Cómo cambia tu día a día (antes / después + demo) -->
+        <div class="tab-panel" id="panel-demo" role="tabpanel" aria-labelledby="tab-demo" data-panel="demo" hidden>
+          <p class="section__lead">
+            Así se ve la diferencia entre tomar pedidos a mano y tener
+            el catálogo funcionando.
+          </p>
+
+          <div class="compare">
+            <div class="compare__col">
+              <h3>Antes</h3>
+              <p>La clienta pregunta por varias fragancias y vos contestás una por una: fotos sueltas, precios repetidos, tiempo perdido.</p>
+            </div>
+            <div class="compare__col">
+              <h3>Después</h3>
+              <p>La clienta elige sola en el catálogo y a vos te llega el pedido armado, listo para confirmar.</p>
+            </div>
+          </div>
+
+          <!-- Demo interactiva real, vive en demo.html -->
+          <div class="demo-box demo-box--live">
+            <p>Probala vos mismo con un catálogo de ejemplo</p>
+            <a href="demo.html" class="btn btn--primary btn--small">Abrir la demo interactiva</a>
+          </div>
+        </div>
+
+        <!-- Panel: Cómo armo un presupuesto -->
+        <div class="tab-panel" id="panel-presupuesto" role="tabpanel" aria-labelledby="tab-presupuesto" data-panel="presupuesto" hidden>
+          <ol class="budget-list">
+            <li><p>Cada perfumería tiene una cantidad distinta de productos, variantes y necesidades.</p></li>
+            <li><p>Por eso no publico un número fijo: depende de cuánto catálogo tengas y qué tan personalizado lo quieras.</p></li>
+            <li><p>Antes de hablar de plata, te muestro la demo funcionando.</p></li>
+            <li><p>Así ves con tus propios ojos cómo le va a llegar el pedido a tu WhatsApp.</p></li>
+            <li><p>Recién ahí, si te cierra lo que ves, hablamos de la inversión.</p></li>
+            <li><p>Todo se conversa en una reunión corta de 20 minutos, sin compromiso.</p></li>
+            <li><p>Vos elegís el día y el horario que te quede cómodo.</p></li>
+            <li><p>Salís de esa charla sabiendo exactamente qué vas a recibir y cuánto sale.</p></li>
+          </ol>
+
+          <!--
+            CTA de WhatsApp: reemplazá el número de este link por el real.
+            Formato: https://wa.me/54911XXXXXXXX (código de país 54, sin el 0 ni el 15).
+            Para editarlo en GitHub.com: abrí este archivo, tocá el ícono del
+            lápiz (Edit), buscá esta línea, cambiá el número y confirmá el
+            commit. No hace falta terminal.
+          -->
+          <div class="budget-actions">
+            <a href="https://wa.me/54911XXXXXXXX" class="btn btn--primary" target="_blank" rel="noopener">Agendá la reunión de 20 minutos</a>
+          </div>
+        </div>
+
       </div>
     </section>
 
-    <!-- ================= 3. DEMO (ANTES / DESPUÉS) ================= -->
-    <section class="section container" id="demo">
-      <h2 class="section__title">Cómo cambia tu día a día</h2>
-      <p class="section__lead placeholder">
-        Texto de ejemplo: acá va una comparación breve de cómo se maneja
-        hoy un pedido por WhatsApp y cómo se maneja con el catálogo
-        digital funcionando.
-      </p>
-
-      <div class="compare">
-        <div class="compare__col">
-          <h3>Antes</h3>
-          <p class="placeholder">Texto placeholder de ejemplo describiendo la situación actual.</p>
-        </div>
-        <div class="compare__col">
-          <h3>Después</h3>
-          <p class="placeholder">Texto placeholder de ejemplo describiendo la situación con el catálogo activo.</p>
-        </div>
-      </div>
-
-      <!-- Demo interactiva real, vive en demo.html -->
-      <div class="demo-box demo-box--live">
-        <p>Probala vos mismo con un catálogo de ejemplo</p>
-        <a href="demo.html" class="btn btn--primary btn--small">Abrir la demo interactiva</a>
-      </div>
-    </section>
-
-    <!-- ================= 4. CÓMO TRABAJO ================= -->
-    <section class="section container" id="como-trabajo">
-      <h2 class="section__title">Cómo trabajo, paso a paso</h2>
-      <p class="section__lead">
-        Así es el proceso completo, desde que hablamos por primera vez
-        hasta que tu catálogo está funcionando. Primero ves cómo queda,
-        recién después hablamos de números.
-      </p>
-
-      <ol class="steps">
-        <li class="step">
-          <span class="step__num">1</span>
-          <div>
-            <h3>Reunión de 20 minutos</h3>
-            <p>Nos conocemos y te escucho: cómo tomás pedidos hoy y qué es lo que más te complica.</p>
-          </div>
-        </li>
-        <li class="step">
-          <span class="step__num">2</span>
-          <div>
-            <h3>Te muestro la demo adaptada a tu negocio</h3>
-            <p>La ves funcionando con productos parecidos a los tuyos, antes de que hablemos de plata. Recién ahí, si te cierra, conversamos la inversión.</p>
-          </div>
-        </li>
-        <li class="step">
-          <span class="step__num">3</span>
-          <div>
-            <h3>Alcance por escrito</h3>
-            <p>Te dejo por escrito qué incluye el trabajo y qué no, para que no haya sorpresas ni malentendidos después.</p>
-          </div>
-        </li>
-        <li class="step">
-          <span class="step__num">4</span>
-          <div>
-            <h3>Construcción</h3>
-            <p>Armo tu catálogo. Según cuánto tengas para cargar, esto lleva 7, 14 o 30 días.</p>
-          </div>
-        </li>
-        <li class="step">
-          <span class="step__num">5</span>
-          <div>
-            <h3>Entrega + un ajuste</h3>
-            <p>Te lo entrego, lo probás vos, y hacemos un ajuste si algo no te termina de cerrar.</p>
-          </div>
-        </li>
-        <li class="step">
-          <span class="step__num">6</span>
-          <div>
-            <h3>Cómo seguimos</h3>
-            <p>Charlamos qué pasa de acá en adelante: cambios, soporte y los próximos pasos si querés sumar más.</p>
-          </div>
-        </li>
-      </ol>
-
-      <p class="note" style="margin-top: 24px; font-style: normal;">
-        De tu lado necesito: tus fotos y precios (o acceso a donde los tengas) y una reunión corta por semana mientras armo el catálogo.
-      </p>
-    </section>
-
-    <!-- ================= 5. CÓMO ARMO UN PRESUPUESTO ================= -->
-    <section class="section container" id="presupuesto">
-      <h2 class="section__title">Cómo armo un presupuesto</h2>
-
-      <ol class="budget-list">
-        <li><p>Cada perfumería tiene una cantidad distinta de productos, variantes y necesidades.</p></li>
-        <li><p>Por eso no publico un número fijo: depende de cuánto catálogo tengas y qué tan personalizado lo quieras.</p></li>
-        <li><p>Antes de hablar de plata, te muestro la demo funcionando.</p></li>
-        <li><p>Así ves con tus propios ojos cómo le va a llegar el pedido a tu WhatsApp.</p></li>
-        <li><p>Recién ahí, si te cierra lo que ves, hablamos de la inversión.</p></li>
-        <li><p>Todo se conversa en una reunión corta de 20 minutos, sin compromiso.</p></li>
-        <li><p>Vos elegís el día y el horario que te quede cómodo.</p></li>
-        <li><p>Salís de esa charla sabiendo exactamente qué vas a recibir y cuánto sale.</p></li>
-      </ol>
-
-      <!--
-        CTA de WhatsApp: reemplazá el número de este link por el real.
-        Formato: https://wa.me/54911XXXXXXXX (código de país 54, sin el 0 ni el 15).
-        Para editarlo en GitHub.com: abrí este archivo, tocá el ícono del
-        lápiz (Edit), buscá esta línea, cambiá el número y confirmá el
-        commit. No hace falta terminal.
-      -->
-      <div class="budget-actions">
-        <a href="https://wa.me/54911XXXXXXXX" class="btn btn--primary" target="_blank" rel="noopener">Agendá la reunión de 20 minutos</a>
-      </div>
-    </section>
-
-    <!-- ================= 6. PREGUNTAS FRECUENTES ================= -->
+    <!-- ================= 3. PREGUNTAS FRECUENTES ================= -->
     <section class="section container" id="preguntas">
       <h2 class="section__title">Preguntas frecuentes</h2>
       <p class="section__lead">
@@ -783,19 +852,11 @@
       </div>
     </section>
 
-    <!-- ================= 7. CTA FINAL — REUNIÓN ================= -->
+    <!-- ================= 4. CTA FINAL — REUNIÓN ================= -->
     <section class="section cta container" id="reunion">
       <div class="cta__box">
         <h2>Charlemos 20 minutos</h2>
-        <p class="placeholder">
-          Texto de ejemplo: invitación corta a agendar, sin compromiso,
-          eligiendo día y horario.
-        </p>
-        <!--
-          El href queda en "#" a propósito: reemplazar por el link real
-          de agenda (Calendly, Google Calendar, etc.) cuando esté listo.
-        -->
-        <a href="#" class="btn btn--primary">Agendá una reunión de 20 minutos</a>
+        <a href="https://wa.me/54911XXXXXXXX" class="btn btn--primary" target="_blank" rel="noopener">Agendá una reunión de 20 minutos</a>
       </div>
     </section>
 
@@ -809,13 +870,52 @@
   <script>
     // ============================================================
     // JS mínimo, sin dependencias.
-    // Único propósito: mostrar el año actual en el pie de página.
+    // 1) Mostrar el año actual en el pie de página.
+    // 2) Manejar las pestañas deslizables (para quién / cómo trabajo /
+    //    cómo cambia tu día a día / presupuesto).
     // ============================================================
     (function actualizarAnio(){
       var footer = document.getElementById('footer-text');
       if (!footer) return;
       var anio = new Date().getFullYear();
       footer.textContent = 'Luciano — catálogos digitales para perfumerías · ' + anio;
+    })();
+
+    (function inicializarTabs(){
+      var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab-btn'));
+      if (tabs.length === 0) return;
+
+      function activarTab(tab){
+        tabs.forEach(function(t){
+          var esta = t === tab;
+          t.setAttribute('aria-selected', esta ? 'true' : 'false');
+          t.tabIndex = esta ? 0 : -1;
+          var panel = document.getElementById('panel-' + t.getAttribute('data-tab'));
+          if (panel) panel.hidden = !esta;
+        });
+        tab.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
+      }
+
+      tabs.forEach(function(tab, indice){
+        tab.addEventListener('click', function(){ activarTab(tab); });
+
+        // Navegación con flechas izquierda/derecha, como cualquier grupo de pestañas
+        tab.addEventListener('keydown', function(evento){
+          if (evento.key !== 'ArrowRight' && evento.key !== 'ArrowLeft') return;
+          evento.preventDefault();
+          var siguiente = evento.key === 'ArrowRight'
+            ? tabs[(indice + 1) % tabs.length]
+            : tabs[(indice - 1 + tabs.length) % tabs.length];
+          activarTab(siguiente);
+          siguiente.focus();
+        });
+      });
+
+      // Si alguien llega con un link tipo index.html#presupuesto,
+      // abrimos esa pestaña en vez de dejarla escondida.
+      var hash = window.location.hash.replace('#', '');
+      var tabDesdeHash = tabs.find(function(t){ return t.getAttribute('data-tab') === hash; });
+      if (tabDesdeHash) activarTab(tabDesdeHash);
     })();
   </script>
 
