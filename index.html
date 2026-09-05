@@ -368,6 +368,34 @@
   /* ============================================================
      8. PRESUPUESTO
      ============================================================ */
+  .budget-list{
+    margin-top: 28px;
+    counter-reset: budget-counter;
+  }
+
+  .budget-list li{
+    counter-increment: budget-counter;
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .budget-list li:last-child{ border-bottom: none; }
+
+  .budget-list li::before{
+    content: counter(budget-counter);
+    font-family: var(--font-display);
+    color: var(--accent);
+    font-size: 1.1rem;
+  }
+
+  .budget-list li p{
+    margin: 0;
+    color: var(--ink);
+  }
+
   .budget-actions{
     margin-top: 24px;
   }
@@ -631,13 +659,27 @@
     <!-- ================= 5. CÓMO ARMO UN PRESUPUESTO ================= -->
     <section class="section container" id="presupuesto">
       <h2 class="section__title">Cómo armo un presupuesto</h2>
-      <p class="section__lead placeholder">
-        Texto de ejemplo: acá se explica por qué no hay un precio fijo
-        publicado y por qué el número se conversa después de ver la
-        demo, en una reunión corta.
-      </p>
+
+      <ol class="budget-list">
+        <li><p>Cada perfumería tiene una cantidad distinta de productos, variantes y necesidades.</p></li>
+        <li><p>Por eso no publico un número fijo: depende de cuánto catálogo tengas y qué tan personalizado lo quieras.</p></li>
+        <li><p>Antes de hablar de plata, te muestro la demo funcionando.</p></li>
+        <li><p>Así ves con tus propios ojos cómo le va a llegar el pedido a tu WhatsApp.</p></li>
+        <li><p>Recién ahí, si te cierra lo que ves, hablamos de la inversión.</p></li>
+        <li><p>Todo se conversa en una reunión corta de 20 minutos, sin compromiso.</p></li>
+        <li><p>Vos elegís el día y el horario que te quede cómodo.</p></li>
+        <li><p>Salís de esa charla sabiendo exactamente qué vas a recibir y cuánto sale.</p></li>
+      </ol>
+
+      <!--
+        CTA de WhatsApp: reemplazá el número de este link por el real.
+        Formato: https://wa.me/54911XXXXXXXX (código de país 54, sin el 0 ni el 15).
+        Para editarlo en GitHub.com: abrí este archivo, tocá el ícono del
+        lápiz (Edit), buscá esta línea, cambiá el número y confirmá el
+        commit. No hace falta terminal.
+      -->
       <div class="budget-actions">
-        <a href="#reunion" class="btn btn--ghost">Coordinar la reunión</a>
+        <a href="https://wa.me/54911XXXXXXXX" class="btn btn--primary" target="_blank" rel="noopener">Agendá la reunión de 20 minutos</a>
       </div>
     </section>
 
